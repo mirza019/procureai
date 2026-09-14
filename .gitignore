@@ -1,0 +1,17 @@
+.venv/
+.env
+.DS_Store
+procureai.db
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+tmp/
+data/generated/*
+!data/generated/.gitkeep
+models/trained/*
+!models/trained/.gitkeep
+reports/*
+!reports/.gitkeep

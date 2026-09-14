@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: procureai
+      POSTGRES_USER: procureai
+      POSTGRES_PASSWORD: procureai
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U procureai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports: ["5432:5432"]
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://procureai:procureai@postgres:5432/procureai
+    depends_on:
+      postgres: {condition: service_healthy}
+    ports: ["8000:8000"]
+volumes:
+  postgres_data:
+
