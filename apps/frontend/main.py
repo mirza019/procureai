@@ -314,7 +314,7 @@ def shell(title: str, subtitle: str):
                 ui.link("Source", settings.github_repository_url, new_tab=True).classes("footer-source").props(
                     'aria-label="ProcureAI source code on GitHub" rel="noopener noreferrer"'
                 )
-                ui.label("© 2026 ProcureAI · Synthetic data demonstration")
+                ui.label("© 2026 ProcureAI · Developed by Mirza Shaheen Iqubal · Synthetic data demonstration")
     taulack_chatbox()
 
 
@@ -1639,7 +1639,7 @@ def login_page():
                     .classes("text-[11px] text-gray-500 text-center")
 
         with ui.element("footer").classes("login-footer"):
-            ui.label("ProcureAI with Ask Taulack AI · © 2026 ProcureAI")
+            ui.label("ProcureAI with Ask Taulack AI · Developed by Mirza Shaheen Iqubal · © 2026 ProcureAI")
 
 
 @ui.page("/pipelines")
