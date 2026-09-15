@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1510" viewBox="0 0 1600 1510" role="img" aria-labelledby="title">
+<title id="title">ProcureAI database schema: tables, keys, and foreign-key relationships</title>
+<rect width="1600" height="1510" fill="#151216"/>
+<text x="25" y="45" fill="#f6f1ff" font-family="Arial" font-size="30">ProcureAI · Database Schema</text>
+<text x="25" y="78" fill="#c9c1d1" font-family="Arial" font-size="16">PK = primary key · FK → referenced table · Selected columns shown · All foreign keys listed</text>
+<rect x="20" y="110" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="34" y="139" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">categories</text>
+<text x="34" y="166" fill="#c9c1d1" font-family="Arial" font-size="13">PK category_id</text>
+<text x="34" y="187" fill="#c9c1d1" font-family="Arial" font-size="13">FK parent_category_id → categories</text>
+<text x="34" y="208" fill="#c9c1d1" font-family="Arial" font-size="13">category_code</text>
+<text x="34" y="229" fill="#c9c1d1" font-family="Arial" font-size="13">category_name</text>
+<text x="34" y="250" fill="#c9c1d1" font-family="Arial" font-size="13">criticality</text>
+<rect x="410" y="110" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="424" y="139" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">pipeline_runs</text>
+<text x="424" y="166" fill="#c9c1d1" font-family="Arial" font-size="13">PK run_id</text>
+<text x="424" y="187" fill="#c9c1d1" font-family="Arial" font-size="13">pipeline_name</text>
+<text x="424" y="208" fill="#c9c1d1" font-family="Arial" font-size="13">started_at</text>
+<text x="424" y="229" fill="#c9c1d1" font-family="Arial" font-size="13">finished_at</text>
+<text x="424" y="250" fill="#c9c1d1" font-family="Arial" font-size="13">status</text>
+<text x="424" y="271" fill="#c9c1d1" font-family="Arial" font-size="13">trigger_type</text>
+<rect x="800" y="110" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="814" y="139" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">suppliers</text>
+<text x="814" y="166" fill="#c9c1d1" font-family="Arial" font-size="13">PK supplier_id</text>
+<text x="814" y="187" fill="#c9c1d1" font-family="Arial" font-size="13">supplier_code</text>
+<text x="814" y="208" fill="#c9c1d1" font-family="Arial" font-size="13">supplier_name</text>
+<text x="814" y="229" fill="#c9c1d1" font-family="Arial" font-size="13">country</text>
+<text x="814" y="250" fill="#c9c1d1" font-family="Arial" font-size="13">region</text>
+<text x="814" y="271" fill="#c9c1d1" font-family="Arial" font-size="13">city</text>
+<rect x="1190" y="110" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="1204" y="139" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">users</text>
+<text x="1204" y="166" fill="#c9c1d1" font-family="Arial" font-size="13">PK id</text>
+<text x="1204" y="187" fill="#c9c1d1" font-family="Arial" font-size="13">email</text>
+<text x="1204" y="208" fill="#c9c1d1" font-family="Arial" font-size="13">hashed_password</text>
+<text x="1204" y="229" fill="#c9c1d1" font-family="Arial" font-size="13">full_name</text>
+<text x="1204" y="250" fill="#c9c1d1" font-family="Arial" font-size="13">role</text>
+<text x="1204" y="271" fill="#c9c1d1" font-family="Arial" font-size="13">is_active</text>
+<rect x="20" y="335" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="34" y="364" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">agent_interactions</text>
+<text x="34" y="391" fill="#c9c1d1" font-family="Arial" font-size="13">PK agent_request_id</text>
+<text x="34" y="412" fill="#c9c1d1" font-family="Arial" font-size="13">FK user_id → users</text>
+<text x="34" y="433" fill="#c9c1d1" font-family="Arial" font-size="13">session_id</text>
+<text x="34" y="454" fill="#c9c1d1" font-family="Arial" font-size="13">agent_name</text>
+<text x="34" y="475" fill="#c9c1d1" font-family="Arial" font-size="13">question</text>
+<text x="34" y="496" fill="#c9c1d1" font-family="Arial" font-size="13">tools_called</text>
+<rect x="410" y="335" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="424" y="364" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">audit_log</text>
+<text x="424" y="391" fill="#c9c1d1" font-family="Arial" font-size="13">PK audit_id</text>
+<text x="424" y="412" fill="#c9c1d1" font-family="Arial" font-size="13">FK user_id → users</text>
+<text x="424" y="433" fill="#c9c1d1" font-family="Arial" font-size="13">entity_type</text>
+<text x="424" y="454" fill="#c9c1d1" font-family="Arial" font-size="13">entity_id</text>
+<text x="424" y="475" fill="#c9c1d1" font-family="Arial" font-size="13">action</text>
+<text x="424" y="496" fill="#c9c1d1" font-family="Arial" font-size="13">before_state</text>
+<rect x="800" y="335" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="814" y="364" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">contracts</text>
+<text x="814" y="391" fill="#c9c1d1" font-family="Arial" font-size="13">PK contract_id</text>
+<text x="814" y="412" fill="#c9c1d1" font-family="Arial" font-size="13">FK supplier_id → suppliers</text>
+<text x="814" y="433" fill="#c9c1d1" font-family="Arial" font-size="13">FK category_id → categories</text>
+<text x="814" y="454" fill="#c9c1d1" font-family="Arial" font-size="13">contract_number</text>
+<text x="814" y="475" fill="#c9c1d1" font-family="Arial" font-size="13">start_date</text>
+<text x="814" y="496" fill="#c9c1d1" font-family="Arial" font-size="13">end_date</text>
+<rect x="1190" y="335" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="1204" y="364" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">materials</text>
+<text x="1204" y="391" fill="#c9c1d1" font-family="Arial" font-size="13">PK material_id</text>
+<text x="1204" y="412" fill="#c9c1d1" font-family="Arial" font-size="13">FK category_id → categories</text>
+<text x="1204" y="433" fill="#c9c1d1" font-family="Arial" font-size="13">material_code</text>
+<text x="1204" y="454" fill="#c9c1d1" font-family="Arial" font-size="13">material_name</text>
+<text x="1204" y="475" fill="#c9c1d1" font-family="Arial" font-size="13">unit_of_measure</text>
+<text x="1204" y="496" fill="#c9c1d1" font-family="Arial" font-size="13">standard_cost</text>
+<rect x="20" y="560" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="34" y="589" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">pipeline_steps</text>
+<text x="34" y="616" fill="#c9c1d1" font-family="Arial" font-size="13">PK step_id</text>
+<text x="34" y="637" fill="#c9c1d1" font-family="Arial" font-size="13">FK run_id → pipeline_runs</text>
+<text x="34" y="658" fill="#c9c1d1" font-family="Arial" font-size="13">step_name</text>
+<text x="34" y="679" fill="#c9c1d1" font-family="Arial" font-size="13">sequence_number</text>
+<text x="34" y="700" fill="#c9c1d1" font-family="Arial" font-size="13">started_at</text>
+<text x="34" y="721" fill="#c9c1d1" font-family="Arial" font-size="13">finished_at</text>
+<rect x="410" y="560" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="424" y="589" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">report_schedules</text>
+<text x="424" y="616" fill="#c9c1d1" font-family="Arial" font-size="13">PK schedule_id</text>
+<text x="424" y="637" fill="#c9c1d1" font-family="Arial" font-size="13">FK created_by → users</text>
+<text x="424" y="658" fill="#c9c1d1" font-family="Arial" font-size="13">report_type</text>
+<text x="424" y="679" fill="#c9c1d1" font-family="Arial" font-size="13">audience_role</text>
+<text x="424" y="700" fill="#c9c1d1" font-family="Arial" font-size="13">cron_expression</text>
+<text x="424" y="721" fill="#c9c1d1" font-family="Arial" font-size="13">timezone</text>
+<rect x="800" y="560" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="814" y="589" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">reports</text>
+<text x="814" y="616" fill="#c9c1d1" font-family="Arial" font-size="13">PK report_id</text>
+<text x="814" y="637" fill="#c9c1d1" font-family="Arial" font-size="13">FK generated_by → users</text>
+<text x="814" y="658" fill="#c9c1d1" font-family="Arial" font-size="13">report_type</text>
+<text x="814" y="679" fill="#c9c1d1" font-family="Arial" font-size="13">audience_role</text>
+<text x="814" y="700" fill="#c9c1d1" font-family="Arial" font-size="13">period_start</text>
+<text x="814" y="721" fill="#c9c1d1" font-family="Arial" font-size="13">period_end</text>
+<rect x="1190" y="560" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="1204" y="589" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">supplier_risk_factors</text>
+<text x="1204" y="616" fill="#c9c1d1" font-family="Arial" font-size="13">PK risk_factor_id</text>
+<text x="1204" y="637" fill="#c9c1d1" font-family="Arial" font-size="13">FK supplier_id → suppliers</text>
+<text x="1204" y="658" fill="#c9c1d1" font-family="Arial" font-size="13">risk_date</text>
+<text x="1204" y="679" fill="#c9c1d1" font-family="Arial" font-size="13">financial_risk</text>
+<text x="1204" y="700" fill="#c9c1d1" font-family="Arial" font-size="13">delivery_risk</text>
+<text x="1204" y="721" fill="#c9c1d1" font-family="Arial" font-size="13">quality_risk</text>
+<rect x="20" y="785" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="34" y="814" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">alerts</text>
+<text x="34" y="841" fill="#c9c1d1" font-family="Arial" font-size="13">PK alert_id</text>
+<text x="34" y="862" fill="#c9c1d1" font-family="Arial" font-size="13">FK supplier_id → suppliers</text>
+<text x="34" y="883" fill="#c9c1d1" font-family="Arial" font-size="13">FK material_id → materials</text>
+<text x="34" y="904" fill="#c9c1d1" font-family="Arial" font-size="13">FK assigned_to → users</text>
+<text x="34" y="925" fill="#c9c1d1" font-family="Arial" font-size="13">alert_type</text>
+<text x="34" y="946" fill="#c9c1d1" font-family="Arial" font-size="13">severity</text>
+<rect x="410" y="785" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="424" y="814" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">procurement_actions</text>
+<text x="424" y="841" fill="#c9c1d1" font-family="Arial" font-size="13">PK action_id</text>
+<text x="424" y="862" fill="#c9c1d1" font-family="Arial" font-size="13">FK supplier_id → suppliers</text>
+<text x="424" y="883" fill="#c9c1d1" font-family="Arial" font-size="13">FK material_id → materials</text>
+<text x="424" y="904" fill="#c9c1d1" font-family="Arial" font-size="13">FK assigned_to → users</text>
+<text x="424" y="925" fill="#c9c1d1" font-family="Arial" font-size="13">action_type</text>
+<text x="424" y="946" fill="#c9c1d1" font-family="Arial" font-size="13">title</text>
+<rect x="800" y="785" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="814" y="814" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">procurement_tasks</text>
+<text x="814" y="841" fill="#c9c1d1" font-family="Arial" font-size="13">PK task_id</text>
+<text x="814" y="862" fill="#c9c1d1" font-family="Arial" font-size="13">FK supplier_id → suppliers</text>
+<text x="814" y="883" fill="#c9c1d1" font-family="Arial" font-size="13">FK material_id → materials</text>
+<text x="814" y="904" fill="#c9c1d1" font-family="Arial" font-size="13">FK contract_id → contracts</text>
+<text x="814" y="925" fill="#c9c1d1" font-family="Arial" font-size="13">FK assigned_to → users</text>
+<text x="814" y="946" fill="#c9c1d1" font-family="Arial" font-size="13">FK created_by → users</text>
+<rect x="1190" y="785" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="1204" y="814" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">purchase_orders</text>
+<text x="1204" y="841" fill="#c9c1d1" font-family="Arial" font-size="13">PK po_id</text>
+<text x="1204" y="862" fill="#c9c1d1" font-family="Arial" font-size="13">FK supplier_id → suppliers</text>
+<text x="1204" y="883" fill="#c9c1d1" font-family="Arial" font-size="13">FK contract_id → contracts</text>
+<text x="1204" y="904" fill="#c9c1d1" font-family="Arial" font-size="13">po_number</text>
+<text x="1204" y="925" fill="#c9c1d1" font-family="Arial" font-size="13">order_date</text>
+<text x="1204" y="946" fill="#c9c1d1" font-family="Arial" font-size="13">required_delivery_date</text>
+<rect x="20" y="1010" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="34" y="1039" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">report_evidence</text>
+<text x="34" y="1066" fill="#c9c1d1" font-family="Arial" font-size="13">PK evidence_id</text>
+<text x="34" y="1087" fill="#c9c1d1" font-family="Arial" font-size="13">FK report_id → reports</text>
+<text x="34" y="1108" fill="#c9c1d1" font-family="Arial" font-size="13">metric</text>
+<text x="34" y="1129" fill="#c9c1d1" font-family="Arial" font-size="13">entity_type</text>
+<text x="34" y="1150" fill="#c9c1d1" font-family="Arial" font-size="13">entity_id</text>
+<text x="34" y="1171" fill="#c9c1d1" font-family="Arial" font-size="13">period</text>
+<rect x="410" y="1010" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="424" y="1039" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">report_recommendations</text>
+<text x="424" y="1066" fill="#c9c1d1" font-family="Arial" font-size="13">PK recommendation_id</text>
+<text x="424" y="1087" fill="#c9c1d1" font-family="Arial" font-size="13">FK report_id → reports</text>
+<text x="424" y="1108" fill="#c9c1d1" font-family="Arial" font-size="13">action</text>
+<text x="424" y="1129" fill="#c9c1d1" font-family="Arial" font-size="13">reason</text>
+<text x="424" y="1150" fill="#c9c1d1" font-family="Arial" font-size="13">expected_benefit</text>
+<text x="424" y="1171" fill="#c9c1d1" font-family="Arial" font-size="13">priority</text>
+<rect x="800" y="1010" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="814" y="1039" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">report_sections</text>
+<text x="814" y="1066" fill="#c9c1d1" font-family="Arial" font-size="13">PK section_id</text>
+<text x="814" y="1087" fill="#c9c1d1" font-family="Arial" font-size="13">FK report_id → reports</text>
+<text x="814" y="1108" fill="#c9c1d1" font-family="Arial" font-size="13">section_key</text>
+<text x="814" y="1129" fill="#c9c1d1" font-family="Arial" font-size="13">sequence_number</text>
+<text x="814" y="1150" fill="#c9c1d1" font-family="Arial" font-size="13">title</text>
+<text x="814" y="1171" fill="#c9c1d1" font-family="Arial" font-size="13">content</text>
+<rect x="1190" y="1010" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="1204" y="1039" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">invoices</text>
+<text x="1204" y="1066" fill="#c9c1d1" font-family="Arial" font-size="13">PK invoice_id</text>
+<text x="1204" y="1087" fill="#c9c1d1" font-family="Arial" font-size="13">FK supplier_id → suppliers</text>
+<text x="1204" y="1108" fill="#c9c1d1" font-family="Arial" font-size="13">FK po_id → purchase_orders</text>
+<text x="1204" y="1129" fill="#c9c1d1" font-family="Arial" font-size="13">invoice_number</text>
+<text x="1204" y="1150" fill="#c9c1d1" font-family="Arial" font-size="13">invoice_date</text>
+<text x="1204" y="1171" fill="#c9c1d1" font-family="Arial" font-size="13">invoice_amount</text>
+<rect x="20" y="1235" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="34" y="1264" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">purchase_order_items</text>
+<text x="34" y="1291" fill="#c9c1d1" font-family="Arial" font-size="13">PK po_item_id</text>
+<text x="34" y="1312" fill="#c9c1d1" font-family="Arial" font-size="13">FK po_id → purchase_orders</text>
+<text x="34" y="1333" fill="#c9c1d1" font-family="Arial" font-size="13">FK material_id → materials</text>
+<text x="34" y="1354" fill="#c9c1d1" font-family="Arial" font-size="13">quantity</text>
+<text x="34" y="1375" fill="#c9c1d1" font-family="Arial" font-size="13">unit_price</text>
+<text x="34" y="1396" fill="#c9c1d1" font-family="Arial" font-size="13">currency</text>
+<rect x="410" y="1235" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="424" y="1264" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">report_tasks</text>
+<text x="424" y="1291" fill="#c9c1d1" font-family="Arial" font-size="13">PK report_task_id</text>
+<text x="424" y="1312" fill="#c9c1d1" font-family="Arial" font-size="13">FK report_id → reports</text>
+<text x="424" y="1333" fill="#c9c1d1" font-family="Arial" font-size="13">FK task_id → procurement_tasks</text>
+<rect x="800" y="1235" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="814" y="1264" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">deliveries</text>
+<text x="814" y="1291" fill="#c9c1d1" font-family="Arial" font-size="13">PK delivery_id</text>
+<text x="814" y="1312" fill="#c9c1d1" font-family="Arial" font-size="13">FK po_item_id → purchase_order_items</text>
+<text x="814" y="1333" fill="#c9c1d1" font-family="Arial" font-size="13">FK supplier_id → suppliers</text>
+<text x="814" y="1354" fill="#c9c1d1" font-family="Arial" font-size="13">planned_delivery_date</text>
+<text x="814" y="1375" fill="#c9c1d1" font-family="Arial" font-size="13">actual_delivery_date</text>
+<text x="814" y="1396" fill="#c9c1d1" font-family="Arial" font-size="13">quantity_expected</text>
+<rect x="1190" y="1235" width="370" height="205" rx="12" fill="#241f2b" stroke="#655078"/>
+<text x="1204" y="1264" fill="#e4d6ff" font-family="Arial" font-size="19" font-weight="bold">quality_incidents</text>
+<text x="1204" y="1291" fill="#c9c1d1" font-family="Arial" font-size="13">PK incident_id</text>
+<text x="1204" y="1312" fill="#c9c1d1" font-family="Arial" font-size="13">FK supplier_id → suppliers</text>
+<text x="1204" y="1333" fill="#c9c1d1" font-family="Arial" font-size="13">FK material_id → materials</text>
+<text x="1204" y="1354" fill="#c9c1d1" font-family="Arial" font-size="13">FK po_item_id → purchase_order_items</text>
+<text x="1204" y="1375" fill="#c9c1d1" font-family="Arial" font-size="13">incident_date</text>
+<text x="1204" y="1396" fill="#c9c1d1" font-family="Arial" font-size="13">severity</text>
+</svg>

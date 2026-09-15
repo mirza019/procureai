@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="740" viewBox="0 0 1200 740" role="img" aria-labelledby="title description">
+  <title id="title">ProcureAI system architecture</title>
+  <desc id="description">NiceGUI and FastAPI share deterministic services backed by SQLAlchemy. Synthetic data populates the database. Taulack uses approved tools and Gemini or Ollama. Analytics supports machine learning and reports.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#a98df5"/></marker>
+    <style>
+      .box{fill:#241f2b;stroke:#655078;stroke-width:1.5;rx:16}
+      .data{fill:#29221d;stroke:#a4774d;stroke-width:1.5;rx:16}
+      .heading{font:600 20px Arial,sans-serif;fill:#f6f1ff}
+      .body{font:16px Arial,sans-serif;fill:#c9c1d1}
+      .flow{fill:none;stroke:#a98df5;stroke-width:2.5;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1200" height="740" rx="24" fill="#151216"/>
+  <text x="45" y="57" font-family="Arial,sans-serif" font-size="30" font-weight="700" fill="#f6f1ff">ProcureAI · System Architecture</text>
+  <text x="45" y="88" class="body">Shared analytics · Evidence-grounded AI · Local demonstration</text>
+  <rect x="45" y="125" width="330" height="90" class="box"/>
+  <text x="65" y="159" class="heading">NiceGUI + Plotly Frontend</text>
+  <text x="65" y="187" class="body">Dashboards · Ask Taulack · Themes</text>
+  <rect x="430" y="125" width="330" height="90" class="box"/>
+  <text x="450" y="159" class="heading">FastAPI Interface</text>
+  <text x="450" y="187" class="body">API clients · JWT · Role-based access</text>
+  <rect x="815" y="125" width="340" height="90" class="data"/>
+  <text x="835" y="159" class="heading">Synthetic Demo Bootstrap</text>
+  <text x="835" y="187" class="body">Purchases · Suppliers · Quality</text>
+  <rect x="45" y="280" width="330" height="100" class="box"/>
+  <text x="65" y="313" class="heading">Taulack Orchestrator</text>
+  <text x="65" y="341" class="body">Intent + scope → approved tools</text>
+  <text x="65" y="365" class="body">Read-only evidence · Validation</text>
+  <rect x="430" y="280" width="330" height="100" class="box"/>
+  <text x="450" y="313" class="heading">Deterministic Services</text>
+  <text x="450" y="341" class="body">Spend · Risk · OTD · Quality · Savings</text>
+  <text x="450" y="365" class="body">Shared by UI, API, tools, and reports</text>
+  <rect x="815" y="280" width="340" height="100" class="data"/>
+  <text x="835" y="313" class="heading">SQLAlchemy + Alembic</text>
+  <text x="835" y="341" class="body">SQLite local / PostgreSQL</text>
+  <text x="835" y="365" class="body">Records · Snapshots · Actions</text>
+  <rect x="45" y="465" width="330" height="110" class="box"/>
+  <text x="65" y="499" class="heading">Gemini / Ollama</text>
+  <text x="65" y="528" class="body">Explains verified evidence</text>
+  <text x="65" y="553" class="body">Deterministic fallback on failure</text>
+  <rect x="430" y="465" width="330" height="110" class="box"/>
+  <text x="450" y="499" class="heading">Machine Learning</text>
+  <text x="450" y="528" class="body">Isolation Forest: price anomalies</text>
+  <text x="450" y="553" class="body">Linear models: spend, OTD, risk</text>
+  <rect x="815" y="465" width="340" height="110" class="data"/>
+  <text x="835" y="499" class="heading">Reports + Action Tracking</text>
+  <text x="835" y="528" class="body">Versioned snapshots · PDF / Excel</text>
+  <text x="835" y="553" class="body">Recommendations · Tasks · Schedules</text>
+  <path d="M210 215V280" class="flow"/>
+  <path d="M595 215V280" class="flow"/>
+  <path d="M985 215V280" class="flow"/>
+  <path d="M375 330H430" class="flow"/>
+  <path d="M760 330H815" class="flow"/>
+  <path d="M210 380V465" class="flow"/>
+  <path d="M595 380V465" class="flow"/>
+  <path d="M760 355H790V520H815" class="flow"/>
+  <path d="M375 170H405V300H430" class="flow"/>
+  <rect x="45" y="630" width="1110" height="65" rx="12" fill="#221c27"/>
+  <text x="65" y="657" class="heading" font-size="17">Decision boundary</text>
+  <text x="65" y="683" class="body">Synthetic data · No arbitrary LLM SQL · Human decisions · ML estimates ≠ verified facts · Secrets stay local</text>
+</svg>
