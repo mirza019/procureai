@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import joblib
@@ -10,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from procureai.db.models import PurchaseOrderItem
 
-MODEL_PATH = Path("models/trained/price_anomaly.joblib")
+MODEL_PATH = Path(os.getenv("MODEL_STORAGE_PATH", "models/trained")) / "price_anomaly.joblib"
 
 
 def train_price_anomaly_model(db: Session, model_path: Path = MODEL_PATH) -> dict[str, float | int]:

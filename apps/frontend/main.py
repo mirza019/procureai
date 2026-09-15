@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import base64
+import hmac
+import os
 import uuid
 from contextlib import contextmanager
 from datetime import UTC, date, datetime
@@ -16,6 +19,7 @@ from design import (
     polish_chart,
 )
 from nicegui import app, ui
+from starlette.responses import Response
 
 from procureai.ai.orchestrator import AgentOrchestrator
 from procureai.db.models import ProcurementAction, Report, ReportSchedule, Role
@@ -50,6 +54,36 @@ from procureai.services.projections import procurement_projections
 advisor_orchestrator = AgentOrchestrator()
 STATIC_DIR = Path(__file__).with_name("static")
 app.add_static_files("/assets", STATIC_DIR)
+
+
+class DemoAuthMiddleware:
+    """Protect the hosted demo while leaving local development unchanged."""
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        username = os.getenv("DEMO_SITE_USERNAME", "")
+        password = os.getenv("DEMO_SITE_PASSWORD", "")
+        if not username or not password:
+            return await self.app(scope, receive, send)
+        headers = {key.decode().lower(): value.decode() for key, value in scope.get("headers", [])}
+        supplied = headers.get("authorization", "")
+        expected = "Basic " + base64.b64encode(f"{username}:{password}".encode()).decode()
+        if hmac.compare_digest(supplied, expected):
+            return await self.app(scope, receive, send)
+        if scope["type"] == "websocket":
+            await send({"type": "websocket.close", "code": 1008, "reason": "Authentication required"})
+            return
+        response = Response(
+            "ProcureAI demo authentication required",
+            status_code=401,
+            headers={"WWW-Authenticate": 'Basic realm="ProcureAI Demo"'},
+        )
+        await response(scope, receive, send)
+
+
+app.add_middleware(DemoAuthMiddleware)
 
 NAV = {
     "Overview": [
@@ -1863,4 +1897,10 @@ def report_preview_page(report_id: str):
 
 
 if __name__ in {"__main__", "__mp_main__"}:
-    ui.run(title="ProcureAI", port=8080, reload=False, favicon="🔷")
+    ui.run(
+        title="ProcureAI",
+        host="0.0.0.0",
+        port=int(os.getenv("PORT", "8080")),
+        reload=False,
+        favicon="🔷",
+    )
