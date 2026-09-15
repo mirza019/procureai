@@ -1,0 +1,16 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=8000 \
+    PROCUREAI_DATA_DIR=/tmp/procureai
+WORKDIR /app
+RUN addgroup --system procureai && adduser --system --ingroup procureai procureai
+COPY pyproject.toml README.md ./
+COPY src ./src
+COPY apps ./apps
+COPY scripts ./scripts
+COPY alembic ./alembic
+COPY alembic.ini ./
+RUN pip install --no-cache-dir . && chown -R procureai:procureai /app
+USER procureai
+EXPOSE 8000
+CMD ["python", "scripts/azure_start.py"]
