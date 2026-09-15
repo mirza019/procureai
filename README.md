@@ -2,9 +2,9 @@
 
 ## AI-Powered Procurement Intelligence & Supplier Risk Platform
 
-### [Open the Live Application](https://procureai.azurewebsites.net)
+### [Open the Live Application](https://procureai.icywater-653510cb.polandcentral.azurecontainerapps.io)
 
-**Azure deployment · Role-based synthetic-data demonstration**
+**Azure Container Apps Consumption · Role-based synthetic-data demonstration**
 
 ![Python](https://img.shields.io/badge/Python-3.12-7354d8)
 ![FastAPI](https://img.shields.io/badge/FastAPI-API-7354d8)
@@ -76,7 +76,7 @@ See [AI agent architecture](docs/ai_agents.md).
 
 ```mermaid
 flowchart TB
-    U[Users] --> AZ[Azure App Service - Linux Free Tier]
+    U[Users] --> AZ[Azure Container Apps - Consumption]
     AZ --> UI[NiceGUI Frontend]
     UI --> AUTH[Signed Demo SSO and RBAC]
     UI --> SVC[Deterministic Procurement Services]
@@ -89,11 +89,13 @@ flowchart TB
     SVC --> REP[PDF and Excel Reporting]
 ```
 
-**Deployed:** Azure App Service, persistent local SQLite demonstration storage, App Service
-configuration for secrets, Gemini provider, and HTTPS. **Implemented/configurable:** PostgreSQL,
+**Deployed:** Azure Container Apps Consumption with scale-to-zero, ephemeral SQLite demonstration
+storage, signed configuration, and HTTPS. **Implemented/configurable:** Gemini, PostgreSQL,
 Azure Blob Storage, and Application Insights. **Not currently deployed:** Azure Database for
 PostgreSQL, Blob Storage, Application Insights, Key Vault, and GitHub Actions delivery.
-Current releases are deployed from a clean Git commit using the Azure CLI and App Service build.
+Current releases are built by GitHub Actions into a public GHCR image and deployed with Azure CLI.
+The public deployment intentionally does not contain a Gemini API key, so Taulack uses verified
+deterministic fallback responses there.
 
 ## Database schema
 
@@ -239,7 +241,7 @@ See the [local demo guide](docs/local_demo.md) for accounts and the demonstratio
 
 ## Demo access
 
-1. Open the [live ProcureAI website](https://procureai.azurewebsites.net).
+1. Open the [live ProcureAI website](https://procureai.icywater-653510cb.polandcentral.azurecontainerapps.io).
 2. Select Executive, Procurement Manager, Procurement Analyst, or Administrator.
 3. Continue with **Demo SSO**—this is a signed portfolio session, not Microsoft Entra SSO.
 4. Explore the role-specific navigation and synthetic procurement intelligence.
