@@ -1,10 +1,22 @@
 # ProcureAI
 
-AI-Powered Procurement Intelligence & Supplier Risk Control Tower
+## AI-Powered Procurement Intelligence & Supplier Risk Platform
 
-ProcureAI turns procurement records into actionable dashboards, supplier investigations,
-cost-saving opportunities, machine-learning projections, and professional reports.
-**Ask Taulack** provides conversational procurement answers grounded in database evidence.
+### [Open the Live Application](https://procureai.azurewebsites.net)
+
+**Azure deployment · Role-based synthetic-data demonstration**
+
+![Python](https://img.shields.io/badge/Python-3.12-7354d8)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-7354d8)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-supported-7354d8)
+![Azure](https://img.shields.io/badge/Azure-App_Service-7354d8)
+![Machine Learning](https://img.shields.io/badge/ML-scikit--learn-7354d8)
+![Gemini](https://img.shields.io/badge/AI-Gemini-7354d8)
+![Docker](https://img.shields.io/badge/Docker-ready-7354d8)
+
+ProcureAI is a full-stack procurement intelligence platform combining deterministic procurement
+analytics, machine learning, supplier risk analysis, cost intelligence, workflow automation,
+and Ask Taulack AI for evidence-based natural-language analysis.
 
 Developed by **Mirza Shaheen Iqubal**. All demonstration data is synthetic.
 
@@ -39,7 +51,16 @@ ML produces estimates and anomaly indicators. Ask Taulack retrieves evidence thr
 read-only tools, then Gemini or Ollama can explain it. The LLM cannot execute arbitrary SQL
 or approve purchases.
 
-### Ask Taulack workflow
+## Ask Taulack AI
+
+<img src="apps/frontend/static/taulack.png" alt="Ask Taulack AI" width="96">
+
+Ask Taulack provides a natural-language interface over verified procurement intelligence.
+It can investigate questions such as “Which supplier has the highest risk?”, “Where are our
+largest savings opportunities?”, “Which suppliers deteriorated?”, “Which contracts require
+attention?”, and “Compare our two highest-spend suppliers.”
+
+### Answer workflow
 
 1. Interpret the question and resolve supplier, metric, and time-period scope.
 2. Route to supported, role-aware procurement tools.
@@ -50,6 +71,29 @@ or approve purchases.
 Investigations cover supplier risk, supplier performance, cost and value, strategic sourcing,
 and executive procurement. Answers are bounded by available data and tools.
 See [AI agent architecture](docs/ai_agents.md).
+
+## Cloud architecture
+
+```mermaid
+flowchart TB
+    U[Users] --> AZ[Azure App Service - Linux Free Tier]
+    AZ --> UI[NiceGUI Frontend]
+    UI --> AUTH[Signed Demo SSO and RBAC]
+    UI --> SVC[Deterministic Procurement Services]
+    UI --> TAU[Ask Taulack Orchestrator]
+    TAU --> TOOLS[Allow-listed Procurement Tools]
+    TOOLS --> SVC
+    TAU --> LLM[Gemini API]
+    SVC --> DB[(Persistent SQLite Demo / PostgreSQL Supported)]
+    SVC --> ML[scikit-learn Models]
+    SVC --> REP[PDF and Excel Reporting]
+```
+
+**Deployed:** Azure App Service, persistent local SQLite demonstration storage, App Service
+configuration for secrets, Gemini provider, and HTTPS. **Implemented/configurable:** PostgreSQL,
+Azure Blob Storage, and Application Insights. **Not currently deployed:** Azure Database for
+PostgreSQL, Blob Storage, Application Insights, Key Vault, and GitHub Actions delivery.
+Current releases are deployed from a clean Git commit using the Azure CLI and App Service build.
 
 ## Database schema
 
@@ -192,6 +236,25 @@ python apps/frontend/main.py
 For PostgreSQL, run `docker compose up -d postgres`, configure its `DATABASE_URL`, then
 run migrations and bootstrap. `docker compose up --build` starts the containerized stack.
 See the [local demo guide](docs/local_demo.md) for accounts and the demonstration story.
+
+## Demo access
+
+1. Open the [live ProcureAI website](https://procureai.azurewebsites.net).
+2. Select Executive, Procurement Manager, Procurement Analyst, or Administrator.
+3. Continue with **Demo SSO**—this is a signed portfolio session, not Microsoft Entra SSO.
+4. Explore the role-specific navigation and synthetic procurement intelligence.
+5. Ask Taulack questions and validate its response against the displayed evidence.
+
+## Data
+
+ProcureAI uses synthetic procurement data for demonstration and portfolio purposes.
+No confidential Siemens Energy or other employer data is included.
+
+## Screenshots
+
+Real application screenshots will be maintained here for the Executive Control Tower,
+Procurement Operations, Supplier Intelligence, Risk Center, Ask Taulack AI, and Dark Bronze
+Theme. No generated or fabricated screenshots are used.
 
 ## Configure AI
 

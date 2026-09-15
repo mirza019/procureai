@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import base64
-import hmac
 import os
 import uuid
 from contextlib import contextmanager
@@ -19,9 +17,9 @@ from design import (
     polish_chart,
 )
 from nicegui import app, ui
-from starlette.responses import Response
 
 from procureai.ai.orchestrator import AgentOrchestrator
+from procureai.config.settings import get_settings
 from procureai.db.models import ProcurementAction, Report, ReportSchedule, Role
 from procureai.db.session import SessionLocal
 from procureai.reporting.intelligent import (
@@ -31,6 +29,7 @@ from procureai.reporting.intelligent import (
 )
 from procureai.schemas.agents import AgentRequest
 from procureai.schemas.reporting import ReportRequest, ReportType
+from procureai.security.demo_sso import IDENTITIES, DemoIdentity, DemoSSOProvider, public_identity
 from procureai.services.analytics import (
     alerts,
     category_spend,
@@ -52,38 +51,10 @@ from procureai.services.analytics import (
 from procureai.services.projections import procurement_projections
 
 advisor_orchestrator = AgentOrchestrator()
+settings = get_settings()
+auth_provider = DemoSSOProvider(settings.secret_key)
 STATIC_DIR = Path(__file__).with_name("static")
 app.add_static_files("/assets", STATIC_DIR)
-
-
-class DemoAuthMiddleware:
-    """Protect the hosted demo while leaving local development unchanged."""
-
-    def __init__(self, app):
-        self.app = app
-
-    async def __call__(self, scope, receive, send):
-        username = os.getenv("DEMO_SITE_USERNAME", "")
-        password = os.getenv("DEMO_SITE_PASSWORD", "")
-        if not username or not password:
-            return await self.app(scope, receive, send)
-        headers = {key.decode().lower(): value.decode() for key, value in scope.get("headers", [])}
-        supplied = headers.get("authorization", "")
-        expected = "Basic " + base64.b64encode(f"{username}:{password}".encode()).decode()
-        if hmac.compare_digest(supplied, expected):
-            return await self.app(scope, receive, send)
-        if scope["type"] == "websocket":
-            await send({"type": "websocket.close", "code": 1008, "reason": "Authentication required"})
-            return
-        response = Response(
-            "ProcureAI demo authentication required",
-            status_code=401,
-            headers={"WWW-Authenticate": 'Basic realm="ProcureAI Demo"'},
-        )
-        await response(scope, receive, send)
-
-
-app.add_middleware(DemoAuthMiddleware)
 
 NAV = {
     "Overview": [
@@ -109,7 +80,19 @@ NAV = {
     ],
 }
 
+ROLE_NAV = {
+    Role.EXECUTIVE: {"/", "/risk", "/projections", "/advisor", "/sourcing", "/reports"},
+    Role.PROCUREMENT_MANAGER: {path for items in NAV.values() for path, _, _ in items if path != "/pipelines"},
+    Role.PROCUREMENT_ANALYST: {"/procurement", "/suppliers", "/spend", "/cost", "/delivery", "/quality", "/advisor"},
+    Role.ADMIN: {"/", "/procurement", "/suppliers", "/risk", "/advisor", "/pipelines", "/reports"},
+}
+
 install_design_system()
+
+
+def current_identity() -> DemoIdentity | None:
+    token = app.storage.user.get("demo_sso_token", "")
+    return auth_provider.verify(token) if token else None
 
 
 def euro(value: float) -> str:
@@ -125,6 +108,9 @@ def pct(value: float) -> str:
 
 
 def taulack_chatbox() -> None:
+    identity = current_identity()
+    if identity is None:
+        return
     session_id = f"taulack-{uuid.uuid4().hex[:12]}"
     panel = ui.card().classes("taulack-panel")
     panel.set_visibility(False)
@@ -183,7 +169,7 @@ def taulack_chatbox() -> None:
                         response = await advisor_orchestrator.execute(
                             db,
                             AgentRequest(question=question, session_id=session_id),
-                            role=Role.PROCUREMENT_MANAGER,
+                            role=identity.role,
                         )
                     thinking_row.delete()
                     answer = response.interpretation.strip()
@@ -253,6 +239,12 @@ def taulack_chatbox() -> None:
 
 @contextmanager
 def shell(title: str, subtitle: str):
+    identity = current_identity()
+    if identity is None:
+        ui.navigate.to("/login")
+        with ui.column():
+            yield
+        return
     with ui.header().classes("procure-header items-center"):
         with ui.element("div").classes("brand-mark flex items-center justify-center"):
             ui.icon("insights").classes("text-xl")
@@ -268,12 +260,31 @@ def shell(title: str, subtitle: str):
         ).props(
             'flat round data-theme-toggle aria-label="Switch to dark theme" title="Switch to dark theme"'
         ).classes("theme-toggle")
-        ui.label("Procurement Manager").classes("context-chip desktop-context")
-        ui.avatar("DA", color="primary", text_color="white").classes("ml-1")
+        with ui.button().props("flat no-caps").classes("profile-button"):
+            with ui.element("div").classes(f"role-avatar role-{identity.role.value.lower()}"):
+                ui.icon(identity.icon)
+            with ui.column().classes("gap-0 desktop-context profile-copy"):
+                ui.label(identity.name).classes("profile-name")
+                ui.label(identity.label).classes("profile-role")
+            with ui.menu().classes("profile-menu"):
+                ui.label("Current role").classes("eyebrow px-4 pt-3")
+                ui.label(identity.label).classes("font-semibold px-4 pb-2")
+                ui.separator()
+                ui.menu_item("Switch Demo Role", lambda: ui.navigate.to("/login"))
+                ui.menu_item("Toggle theme", lambda: ui.run_javascript("window.ProcureAITheme.toggle()"))
+
+                def logout() -> None:
+                    app.storage.user.clear()
+                    ui.navigate.to("/login")
+
+                ui.menu_item("Logout", logout)
     with ui.left_drawer(value=True).props("width=250 breakpoint=1024").classes("procure-drawer"):
         for section, items in NAV.items():
+            allowed_items = [item for item in items if item[0] in ROLE_NAV[identity.role]]
+            if not allowed_items:
+                continue
             ui.label(section).classes("nav-section")
-            for path, label, icon in items:
+            for path, label, icon in allowed_items:
                 ui.button(
                     label, icon=icon, on_click=lambda target=path: ui.navigate.to(target)
                 ).props('flat no-caps align="left"').classes("nav-btn")
@@ -282,8 +293,8 @@ def shell(title: str, subtitle: str):
         with ui.row().classes("items-center px-3 pb-2 gap-2"):
             ui.icon("verified_user").classes("text-primary")
             with ui.column().classes("gap-0"):
-                ui.label("Demo workspace").classes("text-xs font-semibold")
-                ui.label("Synthetic procurement data").classes("text-[11px] text-gray-500")
+                ui.label("Demo Environment").classes("text-xs font-semibold")
+                ui.label("Synthetic Data").classes("text-[11px] text-gray-500")
     with ui.column().classes("page-wrap page-enter w-full"):
         with ui.row().classes("w-full items-end mb-1"):
             with ui.column().classes("gap-0"):
@@ -295,7 +306,15 @@ def shell(title: str, subtitle: str):
                 ui.label("Updated from local pipeline").classes("text-xs text-gray-500")
         yield
         with ui.element("footer").classes("app-footer w-full"):
-            ui.label("Developed by Mirza Shaheen Iqubal")
+            with ui.row().classes("app-footer-inner items-center justify-center"):
+                with ui.column().classes("gap-0 footer-brand"):
+                    ui.label("ProcureAI").classes("font-bold")
+                    ui.label("Procurement Intelligence Platform")
+                ui.label("Powered by analytics, ML & Ask Taulack AI").classes("footer-powered")
+                ui.link("Source", settings.github_repository_url, new_tab=True).classes("footer-source").props(
+                    'aria-label="ProcureAI source code on GitHub" rel="noopener noreferrer"'
+                )
+                ui.label("© 2026 ProcureAI · Synthetic data demonstration")
     taulack_chatbox()
 
 
@@ -1530,33 +1549,97 @@ def advisor_page():
 
 @ui.page("/login")
 def login_page():
+    with SessionLocal() as db:
+        summary = dashboard_kpis(db, 12)
+        scorecards = supplier_scorecards(db)
+    highest_risk = max(scorecards, key=lambda item: item["risk"])
+
     with ui.element("main").classes("login-surface"):
-        with ui.card().classes("login-card page-enter"):
-            with ui.row().classes("items-center justify-center w-full gap-2"):
+        with ui.row().classes("login-header items-center"):
+            with ui.row().classes("items-center gap-2"):
                 with ui.element("div").classes("brand-mark flex items-center justify-center"):
                     ui.icon("insights")
                 ui.html("Procure<span>AI</span>").classes("brand-name")
-            ui.label("Procurement Intelligence Platform").classes(
-                "text-xl font-bold text-center mt-4"
-            )
-            ui.label("Work smarter across suppliers, costs, quality and supply risk.").classes(
-                "page-subtitle text-center mx-auto mb-4"
-            )
-            ui.input("Email", value="demo@procureai.local").props(
-                'outlined type="email" autocomplete="username"'
-            ).classes("w-full")
-            ui.input("Password", password=True, password_toggle_button=True).props(
-                'outlined autocomplete="current-password"'
-            ).classes("w-full")
-            ui.button(
-                "Sign in", icon="arrow_forward", on_click=lambda: ui.navigate.to("/")
-            ).classes("primary-btn w-full").props("no-caps")
-            ui.separator().classes("my-2")
-            with ui.row().classes("items-center justify-center w-full gap-2"):
-                ui.icon("science", size="16px").classes("text-primary")
-                ui.label("Demo environment · Synthetic procurement data").classes(
-                    "text-xs text-gray-500"
-                )
+                ui.label("Procurement Intelligence Platform").classes("login-brand-subtitle")
+            ui.space()
+            ui.button(icon="dark_mode", on_click=lambda: ui.run_javascript("window.ProcureAITheme.toggle()")) \
+                .props('flat round data-theme-toggle aria-label="Switch theme"').classes("theme-toggle")
+
+        with ui.element("div").classes("login-grid page-enter"):
+            with ui.column().classes("login-hero"):
+                ui.label("VERIFIED PROCUREMENT DECISIONS").classes("eyebrow")
+                ui.label("AI-Powered Procurement Intelligence").classes("login-headline")
+                ui.label(
+                    "Transform procurement data into verified insights across spend, suppliers, "
+                    "cost, quality, delivery and supply-chain risk."
+                ).classes("login-copy")
+                with ui.element("div").classes("login-metrics"):
+                    for label, value in (
+                        ("Spend", euro(summary["total_spend"])),
+                        ("Savings opportunity", euro(summary["savings_opportunity"])),
+                        ("On-time delivery", f'{summary["on_time_delivery"]:.1%}'),
+                    ):
+                        with ui.element("div").classes("login-metric"):
+                            ui.label(label)
+                            ui.label(value).classes("login-metric-value")
+                with ui.card().classes("login-taulack-preview"):
+                    with ui.row().classes("items-center gap-3"):
+                        ui.image("/assets/taulack.png").classes("login-taulack-avatar")
+                        with ui.column().classes("gap-0"):
+                            ui.label("Ask Taulack AI").classes("font-bold")
+                            ui.label("Evidence-based procurement intelligence").classes("text-xs text-gray-500")
+                    ui.label("Which supplier requires attention?").classes("preview-question")
+                    ui.label(
+                        f'{highest_risk["code"]} currently has the highest verified risk score.'
+                    ).classes("preview-answer")
+                    ui.label(
+                        f'Risk {highest_risk["risk"]:.1f}/100 · {highest_risk["risk_level"]} · '
+                        f'OTD {highest_risk["otd"]:.1%}'
+                    ).classes("preview-evidence")
+                    ui.label("Ask about suppliers, spend, quality, delivery, cost, contracts and risk.") \
+                        .classes("text-xs text-gray-500")
+
+            with ui.card().classes("login-card"):
+                ui.label("Welcome to ProcureAI").classes("login-card-title")
+                ui.label("Choose an authorized portfolio persona to enter the synthetic workspace.") \
+                    .classes("page-subtitle")
+                role_options = {role.value: identity.label for role, identity in IDENTITIES.items()}
+                role = ui.select(role_options, value=Role.PROCUREMENT_MANAGER.value, label="Select demo role") \
+                    .props("outlined options-dense").classes("w-full mt-3")
+
+                @ui.refreshable
+                def role_preview() -> None:
+                    identity = IDENTITIES[Role(role.value)]
+                    with ui.element("div").classes("login-role-card"):
+                        with ui.element("div").classes(f"role-avatar role-{identity.role.value.lower()}"):
+                            ui.icon(identity.icon)
+                        with ui.column().classes("gap-0"):
+                            ui.label(identity.name).classes("font-bold")
+                            ui.label(identity.description).classes("text-xs text-gray-500")
+
+                role_preview()
+                role.on_value_change(lambda: role_preview.refresh())
+
+                def demo_login() -> None:
+                    try:
+                        token, identity = auth_provider.authenticate(role.value)
+                    except PermissionError:
+                        ui.notify("Select a valid demo role", type="negative")
+                        return
+                    app.storage.user["demo_sso_token"] = token
+                    app.storage.user["identity"] = public_identity(identity)
+                    ui.navigate.to(identity.landing_page)
+
+                ui.button("Continue with Demo SSO", icon="login", on_click=demo_login) \
+                    .classes("primary-btn w-full login-submit").props("no-caps")
+                with ui.row().classes("items-center justify-center w-full gap-2 login-notice"):
+                    ui.icon("science", size="16px").classes("text-primary")
+                    ui.label("Portfolio demo · Synthetic procurement data").classes("text-xs text-gray-500")
+                ui.label("Microsoft Entra SSO is not configured for this public demo.") \
+                    .classes("text-[11px] text-gray-500 text-center")
+
+        with ui.element("footer").classes("login-footer"):
+            ui.label("ProcureAI with Ask Taulack AI · © 2026 ProcureAI")
 
 
 @ui.page("/pipelines")
@@ -1903,4 +1986,5 @@ if __name__ in {"__main__", "__mp_main__"}:
         port=int(os.getenv("PORT", "8080")),
         reload=False,
         favicon="🔷",
+        storage_secret=settings.secret_key,
     )

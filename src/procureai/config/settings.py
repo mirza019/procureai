@@ -27,6 +27,12 @@ class Settings(BaseSettings):
     azure_storage_connection_string: str = ""
     azure_storage_container: str = "procureai"
     applicationinsights_connection_string: str = ""
+    app_public_url: str = "http://localhost:8080"
+    github_repository_url: str = "https://github.com/mirza019/procureai"
+    entra_tenant_id: str = ""
+    entra_client_id: str = ""
+    entra_client_secret: str = ""
+    entra_redirect_uri: str = ""
 
     @field_validator("secret_key")
     @classmethod

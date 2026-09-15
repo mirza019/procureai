@@ -15,6 +15,8 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background:rad
 .nav-btn:hover{background:var(--lavender-50)!important;color:var(--lavender-700)!important;transform:translateX(2px)}
 .nav-btn .q-icon{color:#756d87!important}.nav-btn:hover .q-icon{color:var(--lavender-700)!important;background:var(--lavender-100);box-shadow:inset 0 0 0 1px var(--lavender-200)}
 .context-chip{border:1px solid var(--lavender-200);background:rgba(255,255,255,.85);border-radius:999px;color:var(--text-secondary);font-size:12px;font-weight:600;padding:7px 12px;white-space:nowrap}
+.profile-button{border:1px solid var(--lavender-200);border-radius:13px;padding:4px 8px}.profile-copy{align-items:flex-start}.profile-name{font-size:11px;font-weight:700;line-height:1.2}.profile-role{font-size:10px;color:var(--text-secondary)}
+.role-avatar{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--lavender-100);color:var(--lavender-700);border:1px solid var(--lavender-200)}.role-procurement_manager{background:#e8e0ff}.role-procurement_analyst{background:#eeeaff}.role-admin{background:#eeedf3;color:#625d6c}.profile-menu{min-width:220px}
 .q-btn{border-radius:9px;font-weight:650;letter-spacing:0;transition:transform .18s var(--ease),box-shadow .18s var(--ease),background .18s}
 .q-btn:hover{transform:translateY(-1px)}.q-btn:active{transform:translateY(0) scale(.985)}
 .q-btn.bg-primary,.primary-btn{background:var(--lavender-600)!important;color:white!important;box-shadow:0 6px 16px rgba(115,84,216,.18)}
