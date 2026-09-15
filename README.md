@@ -1,15 +1,18 @@
 # ProcureAI
 
-## AI-Powered Procurement Intelligence & Supplier Risk Platform
+AI-Powered Procurement Intelligence & Supplier Risk Platform
 
-### [Open the Live Application](https://procureai.icywater-653510cb.polandcentral.azurecontainerapps.io)
+🌐 **Live Demo:**
+[https://procureai.icywater-653510cb.polandcentral.azurecontainerapps.io/](https://procureai.icywater-653510cb.polandcentral.azurecontainerapps.io/)
 
-**Azure Container Apps Consumption · Role-based synthetic-data demonstration**
+**Deployment:** Microsoft Azure Container Apps<br>
+**Cloud Deployment:** Microsoft Azure Container Apps<br>
+**Region:** Poland Central
 
 ![Python](https://img.shields.io/badge/Python-3.12-7354d8)
 ![FastAPI](https://img.shields.io/badge/FastAPI-API-7354d8)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-supported-7354d8)
-![Azure](https://img.shields.io/badge/Azure-App_Service-7354d8)
+![Azure](https://img.shields.io/badge/Azure-Container_Apps-7354d8)
 ![Machine Learning](https://img.shields.io/badge/ML-scikit--learn-7354d8)
 ![Gemini](https://img.shields.io/badge/AI-Gemini-7354d8)
 ![Docker](https://img.shields.io/badge/Docker-ready-7354d8)
@@ -76,23 +79,25 @@ See [AI agent architecture](docs/ai_agents.md).
 
 ```mermaid
 flowchart TB
-    U[Users] --> AZ[Azure Container Apps - Consumption]
+    GH[GitHub / CI-CD] --> AZ[Azure Container Apps - Consumption]
+    U[Users] --> AZ
     AZ --> UI[NiceGUI Frontend]
     UI --> AUTH[Signed Demo SSO and RBAC]
     UI --> SVC[Deterministic Procurement Services]
     UI --> TAU[Ask Taulack Orchestrator]
     TAU --> TOOLS[Allow-listed Procurement Tools]
     TOOLS --> SVC
-    TAU --> LLM[Gemini API]
-    SVC --> DB[(Persistent SQLite Demo / PostgreSQL Supported)]
+    TAU -. optional provider .-> LLM[Gemini API]
+    SVC --> DB[(Ephemeral SQLite Demo)]
+    SVC -. configured data service .-> PG[(PostgreSQL Supported)]
     SVC --> ML[scikit-learn Models]
     SVC --> REP[PDF and Excel Reporting]
 ```
 
 **Deployed:** Azure Container Apps Consumption with scale-to-zero, ephemeral SQLite demonstration
-storage, signed configuration, and HTTPS. **Implemented/configurable:** Gemini, PostgreSQL,
-Azure Blob Storage, and Application Insights. **Not currently deployed:** Azure Database for
-PostgreSQL, Blob Storage, Application Insights, Key Vault, and GitHub Actions delivery.
+storage, signed configuration, and HTTPS. **Implemented/configurable:** Gemini and PostgreSQL.
+**Not currently deployed:** Azure Database for PostgreSQL, Blob Storage, Application Insights,
+or Key Vault.
 Current releases are built by GitHub Actions into a public GHCR image and deployed with Azure CLI.
 The public deployment intentionally does not contain a Gemini API key, so Taulack uses verified
 deterministic fallback responses there.
