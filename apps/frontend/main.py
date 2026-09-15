@@ -1551,8 +1551,6 @@ def advisor_page():
 def login_page():
     with SessionLocal() as db:
         summary = dashboard_kpis(db, 12)
-        scorecards = supplier_scorecards(db)
-    highest_risk = max(scorecards, key=lambda item: item["risk"])
 
     with ui.element("main").classes("login-surface"):
         with ui.row().classes("login-header items-center"):
@@ -1582,22 +1580,7 @@ def login_page():
                         with ui.element("div").classes("login-metric"):
                             ui.label(label)
                             ui.label(value).classes("login-metric-value")
-                with ui.card().classes("login-taulack-preview"):
-                    with ui.row().classes("items-center gap-3"):
-                        ui.image("/assets/taulack.png").classes("login-taulack-avatar")
-                        with ui.column().classes("gap-0"):
-                            ui.label("Ask Taulack AI").classes("font-bold")
-                            ui.label("Evidence-based procurement intelligence").classes("text-xs text-gray-500")
-                    ui.label("Which supplier requires attention?").classes("preview-question")
-                    ui.label(
-                        f'{highest_risk["code"]} currently has the highest verified risk score.'
-                    ).classes("preview-answer")
-                    ui.label(
-                        f'Risk {highest_risk["risk"]:.1f}/100 · {highest_risk["risk_level"]} · '
-                        f'OTD {highest_risk["otd"]:.1%}'
-                    ).classes("preview-evidence")
-                    ui.label("Ask about suppliers, spend, quality, delivery, cost, contracts and risk.") \
-                        .classes("text-xs text-gray-500")
+                ui.label("Integrated with Ask Taulack AI").classes("login-ai-note")
 
             with ui.card().classes("login-card"):
                 ui.label("Welcome to ProcureAI").classes("login-card-title")
