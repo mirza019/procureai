@@ -1549,9 +1549,6 @@ def advisor_page():
 
 @ui.page("/login")
 def login_page():
-    with SessionLocal() as db:
-        summary = dashboard_kpis(db, 12)
-
     with ui.element("main").classes("login-surface"):
         with ui.row().classes("login-header items-center"):
             with ui.row().classes("items-center gap-2"):
@@ -1571,16 +1568,9 @@ def login_page():
                     "Transform procurement data into verified insights across spend, suppliers, "
                     "cost, quality, delivery and supply-chain risk."
                 ).classes("login-copy")
-                with ui.element("div").classes("login-metrics"):
-                    for label, value in (
-                        ("Spend", euro(summary["total_spend"])),
-                        ("Savings opportunity", euro(summary["savings_opportunity"])),
-                        ("On-time delivery", f'{summary["on_time_delivery"]:.1%}'),
-                    ):
-                        with ui.element("div").classes("login-metric"):
-                            ui.label(label)
-                            ui.label(value).classes("login-metric-value")
-                ui.label("Integrated with Ask Taulack AI").classes("login-ai-note")
+                with ui.row().classes("login-ai-lockup items-center gap-3"):
+                    ui.image("/assets/taulack.png").classes("login-ai-logo")
+                    ui.label("Integrated with Ask Taulack AI").classes("login-ai-note")
 
             with ui.card().classes("login-card"):
                 ui.label("Welcome to ProcureAI").classes("login-card-title")

@@ -36,6 +36,7 @@ html[data-theme="dark"] body:before{background:none}
 [data-theme="dark"] .taulack-message-avatar,[data-theme="dark"] .taulack-launcher{border-color:var(--border-light)!important}
 [data-theme="dark"] .login-surface{background:radial-gradient(circle at 72% 14%,rgba(194,138,82,.10),transparent 32%),linear-gradient(135deg,#12100f,#1b1715)}
 [data-theme="dark"] .login-header{background:transparent!important}[data-theme="dark"] .login-metric,[data-theme="dark"] .login-taulack-preview,[data-theme="dark"] .login-role-card{background:rgba(35,30,26,.88)!important;border-color:var(--border-light)}[data-theme="dark"] .login-surface:after{color:rgba(194,138,82,.20)}[data-theme="dark"] .preview-question{background:#443124;color:var(--text-primary)}[data-theme="dark"] .preview-evidence{color:#ddbb91}[data-theme="dark"] .role-avatar{background:#302720;color:#ddbb91;border-color:#44382f}[data-theme="dark"] .app-footer{border-color:var(--border-light)}[data-theme="dark"] .footer-source:hover{color:#ddbb91}
+[data-theme="dark"] .login-ai-lockup{background:rgba(35,30,26,.88);border-color:var(--border-light)}[data-theme="dark"] .login-ai-logo{border-color:#44382f}[data-theme="dark"] .login-ai-note{color:#ddbb91}
 [data-theme="dark"] .q-skeleton{background:var(--surface-secondary)}
 [data-theme="dark"] .q-notification{background:var(--surface-elevated);color:var(--text-primary)}
 [data-theme="dark"] a{color:#ddbb91}
